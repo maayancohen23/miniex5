@@ -13,4 +13,4 @@ while True: # Infinite loop to keep the server running and listening for message
 
     # CHANGE: Send the received message back to the client in lowercase
    # s.sendto(data.upper(), sender_info) # Send the received message back to the client (in uppercase)
-    s.sendto("The message from server:" data.lower(), sender_info)
+    s.sendto("The message from server:".encode + data.lower(), sender_info)
