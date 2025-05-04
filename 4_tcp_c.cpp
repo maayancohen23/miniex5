@@ -11,7 +11,7 @@ using namespace std; // namespace std
 int main() {
 
     const char* ip_address = "127.0.0.1"; // Destination IP address- localhost (127.0.0.1)
-    const int port_no = 5555; // Destination port number
+    const int port_no = 5557; // Destination port number
 
     int sock = socket(AF_INET, SOCK_STREAM, 0); // Create a TCP socket with IPv4
     if (sock < 0) { // Check if the socket was created successfully
@@ -30,7 +30,12 @@ int main() {
         perror("error connecting to server");
     }
 
-    char data_addr[] = "Im a message"; // Data that will be sent to the server
+   // char data_addr[] = "Im a message"; // Data that will be sent to the server
+   // CHANGE: Recive data for sending to server from the user
+    char data_addr[1024];
+    cout << "Enter message: ";
+    cin.getline(data_addr, sizeof(data_addr));
+
     int data_len = strlen(data_addr);
     int sent_bytes = send(sock, data_addr, data_len, 0); // Send the data to the server
 

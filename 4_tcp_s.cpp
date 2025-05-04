@@ -10,7 +10,7 @@ using namespace std; // namespace std
 
 int main() {
 
-    const int server_port = 5555; // Server port number
+    const int server_port = 5557; // Server port number
 
     int sock = socket(AF_INET, SOCK_STREAM, 0); // Create a TCP socket with IPv4
     if (sock < 0) { // Check if the socket was created successfully
@@ -36,33 +36,49 @@ int main() {
 
     struct sockaddr_in client_sin; // Create a sockaddr_in structure for the client address
     unsigned int addr_len = sizeof(client_sin);
-    int client_sock = accept(sock,  (struct sockaddr *) &client_sin,  &addr_len); // Accept a connection from a client
+   // CHANGE: Accept and handle multiple client connections
+   while (true) {
+        int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len); // Accept a connection from a client
 
-    if (client_sock < 0) { // Check if the connection for the client was successful
-        perror("error accepting client");
-    }
+        if (client_sock < 0) { // Check if the connection for the client was successful
+            perror("error accepting client");
+            continue; // Continue accepting other clients even if one failed
+        }
 
-    char buffer[4096]; // Buffer to store the data received from the client - 4096 bytes
-    int expected_data_len = sizeof(buffer);
-    int read_bytes = recv(client_sock, buffer, expected_data_len, 0); // Receive the data from the client
-    if (read_bytes == 0) { // Check if the connection was closed
-    // connection is closed
-    }
-    else if (read_bytes < 0) { // Check if the data was received successfully
-    // error
-    }
-    else { // Print to console the data received from the client
-        cout << buffer;
-    }
+        char buffer[4096]; // Buffer to store the data received from the client - 4096 bytes
+        int expected_data_len = sizeof(buffer);
+        int read_bytes = recv(client_sock, buffer, expected_data_len, 0); // Receive the data from the client
+        if (read_bytes == 0) { // Check if the connection was closed
+            cout << "Connection closed by client." << endl;
+            close(client_sock);
+            continue;
+        }
+        else if (read_bytes < 0) { // Check if the data was received successfully
+            perror("Error receiving data from client");
+            close(client_sock);
+            continue;
+        }
+        else { // Print to console the data received from the client
+            cout << "Received from client: " << buffer << endl; // Print to console the data received from the client
+        }
 
-    // Send a response back to the client
-    int sent_bytes = send(client_sock, buffer, read_bytes, 0);
 
-    if (sent_bytes < 0) { // Check if the data was sent successfully
-        perror("error sending to client");
-    }
 
-    close(client_sock); // Close the client socket
+
+
+
+
+
+        // Send a response back to the client
+        int sent_bytes = send(client_sock, buffer, read_bytes, 0);
+
+        if (sent_bytes < 0) { // Check if the data was sent successfully
+            perror("error sending to client");
+            continue;
+        }
+
+        close(client_sock); // Close the client socket
+    } 
     close(sock); // Close the server socket
 
 

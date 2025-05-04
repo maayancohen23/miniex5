@@ -11,4 +11,6 @@ while True: # Infinite loop to keep the server running and listening for message
     print(data.decode('utf-8')) # Decode the received data from bytes to string and print it
     print(sender_info) # Print the sender's info (IP address and port number)
 
-    s.sendto(data.upper(), sender_info) # Send the received message back to the client (in uppercase)
+    # CHANGE: Send the received message back to the client in lowercase
+   # s.sendto(data.upper(), sender_info) # Send the received message back to the client (in uppercase)
+    s.sendto("The message from server:" data.lower(), sender_info)

@@ -15,6 +15,9 @@ while True: # Infinite loop to keep the server running and listening for message
         print('Received: ', data.decode('utf-8')) # Decode the received data from bytes to string and print it
         client_socket.send(data.upper()) # Send the received message back to the client (in uppercase)
         data = client_socket.recv(1024) # Receive the next message from the client (with buffer size 1024 bytes)
+        # CHANGE: Set a timeout for the client socket to avoid blocking indefinitely
+        client_socket.settimeout(60)  # Set a timeout of 60 seconds for the client socket
+
 
     print('Client disconnected') # Print that the client has disconnected
     client_socket.close() # Close the client socket

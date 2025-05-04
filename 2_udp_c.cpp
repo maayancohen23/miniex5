@@ -24,7 +24,11 @@ int main() {
     sin.sin_addr.s_addr = inet_addr(ip_address); // Convert the IP address from string to binary form
     sin.sin_port = htons(port_no); // Convert the port number from host byte order to network byte order
 
-    char data[] = "hello"; // Data that will be sent to the server
+    //char data[] = "hello"; // Data that will be sent to the server
+    // CHANGE: Recive data for sending to server from the user
+    char data[1024];
+    cout << "Enter message: ";
+    cin.getline(data, sizeof(data));
     int data_len = sizeof(data); // len of the data that will be sent to the server
 
     int sent_bytes = sendto(sock, data, data_len, 0, (struct sockaddr *) &sin, sizeof(sin)); // Send the data to the server
